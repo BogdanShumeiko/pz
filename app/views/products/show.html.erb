@@ -1,0 +1,11 @@
+<% if can? :edit, Product %>
+<h1>Информация о недвижимости</h1>
+
+<p><strong>Название:</strong> <%= @product.name %></p>
+<p><strong>Описание:</strong> <%= @product.cost %></p>
+
+<p><%= link_to 'Редактировать', edit_product_path(@product) %></p>
+<p><%= link_to 'Назад',href="http://localhost:3000/users/products" %></p>
+	<% else %>
+	<h1>Страница доступна только Риелтору</h1>
+<% end %>

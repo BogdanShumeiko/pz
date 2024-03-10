@@ -1,0 +1,77 @@
+<% if can? :read, Premise %>
+  <h1>Список недвижимости</h1>
+id пользователя: <%= current_user.id %><ul>
+    <% @premises.each do |premise| %>
+	<% if premise.owner.blank? || current_user.role == "realtor"  %>
+      <li>
+        
+          Адрес: <%= premise.name %> <br>
+          Цена: <%= premise.cost %> <br>
+		  Комнат: <%= premise.rooms %><br>
+		  Квадратных метров: <%= premise.square_meters %><br>
+          
+
+          <% if can? :edit, Premise %>
+            <td><%= link_to 'Просмотреть', premise %></td>
+            <td><%= link_to 'Редактировать', edit_premise_path(premise) %></td>
+            <%= button_to 'Удалить', premise, method: :delete, data: { confirm: 'Вы уверены?' } %>
+          <% end %>
+          <% if can? :trade, Premise %>
+            <%= form_with url: { action: "buy", id: premise.id } do |form| %>
+            <%= form.hidden_field :premise_id, value: premise.id %>
+            <%= form.submit 'Снять на месяц', onclick: "alert('С вами свяжутся для оформления документов по почте !');"  %>
+            <%= form.hidden_field :buyer_name, value: current_user.id %>
+          <% end %>
+    <% end %>
+	
+		  <% end %>
+		     </li>
+    <% end %> 
+	<% if can?(:trade, Premise) %> 
+		  <h2>Список арендуемой вами недвижимости:</h2>
+		  <% end %>
+	<% @premises.each do |premise| %>
+
+        <% if premise.owner.to_i == current_user.id.to_i && can?(:trade, Premise) %> 
+          Адрес: <%= premise.name %> <br>
+          Цена: <%= premise.cost %> <br>
+		  Комнат: <%= premise.rooms %><br>
+		  Квадратных метров: <%= premise.square_meters %><br>
+
+
+          <%= button_to 'Отказаться от аренды', { action: "sell", id: premise.id }, method: :put %>
+
+		<% end %>
+      </li>
+    <% end %>
+  </ul>
+  <p>Текущий пользователь: <%= current_user.first_name %></p>
+  <p>Роль: <%= current_user.role %></p>
+  <% if can? :edit, Premise %>
+    <h2>Добавление новой недвижимости</h2>
+    <%= form_with model: @premise, url: premises_path do |form| %>
+      <div>
+        <%= form.label :Адрес %>
+        <%= form.text_field :name %>
+      </div>
+      <div>
+        <%= form.label :Цена %>
+        <%= form.number_field :cost, min: 0 %>
+      </div>
+	  <div>
+		<%= form.label :Комнат %>
+		<%= form.number_field :rooms, min: 0 %>
+	  </div>
+
+	<div>
+		<%= form.label :Квадратных_метров %>
+		<%= form.number_field :square_meters, min: 0 %>
+	</div>
+      <div>
+        <%= form.submit 'Создать' %>
+      </div>
+    <% end %>
+  <% end %>
+<% else %>
+  <h1>Список товаров доступен только пользователям с ролью realtor или renter</h1>
+<% end %>

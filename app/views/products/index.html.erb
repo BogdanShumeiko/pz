@@ -1,0 +1,65 @@
+<% if can? :read, Product %>
+  <h1>Список недвижимости</h1>
+id пользователя: <%= current_user.id %><ul>
+    <% @products.each do |product| %>
+	<% if product.owner.blank? || current_user.role == "broker"  %>
+      <li>
+        
+          name: <%= product.name %> <br>
+          cost: <%= product.cost %> <br>
+          
+
+          <% if can? :edit, Product %>
+            <td><%= link_to 'Просмотреть', product %></td>
+            <td><%= link_to 'Редактировать', edit_product_path(product) %></td>
+            <%= button_to 'Удалить', product, method: :delete, data: { confirm: 'Вы уверены?' } %>
+          <% end %>
+          <% if can? :trade, Product %>
+            <%= form_with url: { action: "buy", id: product.id } do |form| %>
+            <%= form.hidden_field :product_id, value: product.id %>
+            <%= form.submit 'Снять' %>
+            <%= form.hidden_field :buyer_name, value: current_user.id %>
+          <% end %>
+    <% end %>
+	
+		  <% end %>
+		     </li>
+    <% end %> 
+	<% if can?(:trade, Product) %> 
+		  <h2>Корзина</h2>
+		  <% end %>
+	<% @products.each do |product| %>
+
+        <% if product.owner.to_i == current_user.id.to_i && can?(:trade, Product) %> 
+          name: <%= product.name %> <br>
+          cost: <%= product.cost %> <br>
+		  
+
+          <%= button_to 'Отказаться от аренды', { action: "sell", id: product.id }, method: :put %>
+		  <%= button_to 'Подтвердить аренду', product, method: :delete, data: { confirm: 'Вы уверены?' }, onclick: "alert('Товар отправлен вам !');"  %>
+        
+		<% end %>
+      </li>
+    <% end %>
+  </ul>
+  <p>Текущий пользователь: <%= current_user.first_name %></p>
+  <p>Роль: <%= current_user.role %></p>
+  <% if can? :edit, Product %>
+    <h2>Добавление новой недвижимости</h2>
+    <%= form_with model: @product, url: products_path do |form| %>
+      <div>
+        <%= form.label :name %>
+        <%= form.text_field :name %>
+      </div>
+      <div>
+        <%= form.label :cost %>
+        <%= form.text_field :cost %>
+      </div>
+      <div>
+        <%= form.submit 'Создать' %>
+      </div>
+    <% end %>
+  <% end %>
+<% else %>
+  <h1>Список товаров доступен только пользователям с ролью realtor или renter</h1>
+<% end %>

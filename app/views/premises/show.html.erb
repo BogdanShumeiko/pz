@@ -1,0 +1,13 @@
+<% if can? :edit, Premise %>
+<h1>Информация о недвижимости</h1>
+
+<p><strong>Адрес: </strong> <%= @premise.name %></p>
+<p><strong>Цена: </strong> <%= @premise.cost %></p>
+<p><strong>Комнат: </strong> <%= @premise.rooms %></p>
+<p><strong>Квадратных метров: </strong> <%= @premise.square_meters %></p>
+
+<p><%= link_to 'Редактировать', edit_premise_path(@premise) %></p>
+<p><%= link_to 'Назад',href="http://localhost:3000/users/premises" %></p>
+	<% else %>
+	<h1>Страница доступна только Риелтору</h1>
+<% end %>

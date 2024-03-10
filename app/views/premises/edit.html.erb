@@ -1,0 +1,10 @@
+<% if can? :edit, Premise %>
+<h1>Редактирование недвижимости</h1>
+
+<%= render 'form', premise: @premise %>
+
+<p><%= link_to 'Просмотреть', @premise %></p>
+<p><%= link_to 'Назад', premise_path %></p>
+	<% else %>
+	<h1>Страница доступна только Риелтору</h1>
+<% end %>

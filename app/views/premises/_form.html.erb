@@ -1,0 +1,37 @@
+<%= form_with(model: premise, url: premise.persisted? ? premise_path(premise) : premises_path, local: true) do |form| %>
+  <% if premise.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(premise.errors.count, 'error') %> запретила сохранение этого объекта:</h2>
+
+      <ul>
+        <% premise.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :Адрес %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :Цена %>
+    <%= form.number_field :cost, min:0 %>
+  </div>
+  
+  <div class="field">
+  <%= form.label :Комнат %>
+  <%= form.number_field :rooms, min: 0 %>
+</div>
+
+<div class="field">
+  <%= form.label :Квадратных_метров %>
+  <%= form.number_field :square_meters, min: 0 %>
+</div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

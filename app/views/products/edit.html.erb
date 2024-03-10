@@ -1,0 +1,10 @@
+<% if can? :edit, Product %>
+<h1>Редактирование недвижимости</h1>
+
+<%= render 'form', product: @product %>
+
+<p><%= link_to 'Просмотреть', @product %></p>
+<p><%= link_to 'Назад', product_path %></p>
+	<% else %>
+	<h1>Страница доступна только Риелтору</h1>
+<% end %>
